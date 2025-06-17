@@ -16,6 +16,7 @@ struct AlbumCardView: View {
         HStack {
             if let imageURLString = album.images?.first?.url, let url = URL(string: imageURLString) {
                 KFImage(url)
+                    .cancelOnDisappear(true) // Moved here
                     .placeholder {
                         Image(systemName: "music.note.list")
                             .resizable()
@@ -30,7 +31,6 @@ struct AlbumCardView: View {
                     .frame(width: 80, height: 80)
                     .cornerRadius(12)
                     .clipped()
-                    .cancelOnDisappear(true)
             } else {
                 // Fallback placeholder if there are no images or URL is invalid
                 Image(systemName: "music.note.list")
