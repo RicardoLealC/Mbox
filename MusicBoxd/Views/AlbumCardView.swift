@@ -7,26 +7,48 @@
 
 
 import SwiftUI
+import Kingfisher // Import Kingfisher
 
 struct AlbumCardView: View {
-    let album: Album
+    let album: SpotifyAlbum // Updated to use SpotifyAlbum model
 
     var body: some View {
         HStack {
-            Image(album.imageName)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 80, height: 80)
-                .cornerRadius(12)
-                .clipped()
+            if let imageURLString = album.images?.first?.url, let url = URL(string: imageURLString) {
+                KFImage(url)
+                    .placeholder {
+                        Image(systemName: "music.note.list")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 80, height: 80)
+                            .cornerRadius(12)
+                            .clipped()
+                            .foregroundColor(.gray)
+                    }
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 80, height: 80)
+                    .cornerRadius(12)
+                    .clipped()
+                    .cancelOnDisappear(true)
+            } else {
+                // Fallback placeholder if there are no images or URL is invalid
+                Image(systemName: "music.note.list")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 80, height: 80)
+                    .cornerRadius(12)
+                    .clipped()
+                    .foregroundColor(.gray)
+            }
 
             VStack(alignment: .leading, spacing: 6) {
-                Text(album.title)
+                Text(album.name) // Was album.title
                     .font(.headline)
-                Text(album.artist)
+                Text(album.artists?.first?.name ?? "Unknown Artist") // Was album.artist
                     .font(.subheadline)
                     .foregroundColor(.gray)
-                Text("Popularidad: \(album.popularityScore)")
+                Text("Popularidad: \(album.popularity ?? 0)") // Was album.popularityScore
                     .font(.caption)
                     .foregroundColor(.blue)
             }
